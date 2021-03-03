@@ -1,6 +1,6 @@
 {
   "name": "@the-ksquare-group/react-native-webview-leaflet",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "A React Native component that uses a React Native WebView to provide a Leaflet map.",
   "repository": {
     "type": "git",
