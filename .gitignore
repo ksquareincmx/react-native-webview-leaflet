@@ -25,3 +25,4 @@ secrets.ts
 /HTML/readyForBuild
 /HTML/.cache
 node_modules
+yarn-error.log

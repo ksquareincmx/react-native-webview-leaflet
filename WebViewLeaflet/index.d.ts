@@ -17,10 +17,7 @@ import { WebViewError } from "react-native-webview/lib/WebViewTypes";
  */
 export as namespace ReactNativeWebViewLeaflet;
 
-export {
-  default as WebViewLeaflet,
-  WebViewLeafletProps
-} from "./WebViewLeaflet";
+export { default as WebViewLeaflet, WebViewLeafletProps } from "./WebViewLeaflet";
 export {
   LatLng,
   Point,
@@ -34,5 +31,5 @@ export {
   MapLayer,
   MapLayerType,
   MapShapeType,
-  WebviewLeafletMessage
+  WebviewLeafletMessage,
 } from "./models";

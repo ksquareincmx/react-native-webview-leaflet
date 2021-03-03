@@ -30,7 +30,7 @@
     "del-cli": "^3.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-run": "^1.7.1",
-    "typescript": "~3.6.3"
+    "typescript": "^3.8.3"
   },
   "private": true
 }

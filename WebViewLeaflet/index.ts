@@ -1,8 +1,6 @@
-export {
-  default as WebViewLeaflet,
-  WebViewLeafletProps
-} from "./WebViewLeaflet";
-export {
+export { default as WebViewLeaflet } from "./WebViewLeaflet";
+export type { WebViewLeafletProps } from "./WebViewLeaflet";
+export type {
   LatLng,
   Point,
   LatLngBounds,
@@ -15,5 +13,5 @@ export {
   MapLayer,
   MapLayerType,
   MapShapeType,
-  WebviewLeafletMessage
+  WebviewLeafletMessage,
 } from "./models";

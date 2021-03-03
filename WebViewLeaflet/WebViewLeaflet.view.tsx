@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View, NativeSyntheticEvent } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { Asset } from 'expo-asset';
-import DebugMessageBox from './DebugMessageBox';
-import { WebViewError } from 'react-native-webview/lib/WebViewTypes';
+import React, { ReactElement } from "react";
+import { StyleSheet, View, NativeSyntheticEvent } from "react-native";
+import { WebView } from "react-native-webview";
+import { Asset } from "expo-asset";
+import DebugMessageBox from "./DebugMessageBox";
+import { WebViewError } from "react-native-webview/lib/WebViewTypes";
 
 export interface Props {
   backgroundColor: string;
@@ -28,26 +28,26 @@ const WebViewLeafletView = ({
   onError,
   onLoadEnd,
   onLoadStart,
-  setWebViewRef
+  setWebViewRef,
 }: Props) => {
   return (
     <View
       style={{
         ...StyleSheet.absoluteFillObject,
         flex: 1,
-        backgroundColor: backgroundColor
+        backgroundColor: backgroundColor,
       }}
     >
       {webviewContent && (
         <WebView
           containerStyle={{
             flex: 0,
-            height: '100%',
-            width: '100%'
+            height: "100%",
+            width: "100%",
           }}
           /*  style={{ flex: 0, height: '100%', width: '100%' }} */
           ref={(component) => {
-            setWebViewRef(component);
+            setWebViewRef(component as WebView);
           }}
           javaScriptEnabled={true}
           onLoadEnd={onLoadEnd}
@@ -58,23 +58,19 @@ const WebViewLeafletView = ({
             }
           }}
           domStorageEnabled={true}
-          useWebKit={true}
           startInLoadingState={true}
           onError={onError}
-          originWhitelist={['*']}
-         /*  renderLoading={loadingIndicator || null} */
+          originWhitelist={["*"]}
+          /*  renderLoading={loadingIndicator || null} */
           source={{
-            html: webviewContent
+            html: webviewContent,
           }}
           allowFileAccess={true}
-        allowUniversalAccessFromFileURLs={true}
-        allowFileAccessFromFileURLs={true}
+          allowUniversalAccessFromFileURLs={true}
+          allowFileAccessFromFileURLs={true}
         />
       )}
-      <DebugMessageBox
-        debugMessages={debugMessages}
-        doShowDebugMessages={doShowDebugMessages}
-      />
+      <DebugMessageBox debugMessages={debugMessages} doShowDebugMessages={doShowDebugMessages} />
     </View>
   );
 };

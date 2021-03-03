@@ -11,7 +11,7 @@ import {
   MapLayer,
   MapShape,
   OwnPositionMarker,
-  OWN_POSTION_MARKER_ID
+  OWN_POSTION_MARKER_ID,
 } from "./models";
 import { ActivityOverlay } from "./ActivityOverlay";
 import * as FileSystem from "expo-file-system";
@@ -38,9 +38,9 @@ export interface WebViewLeafletProps {
 
 interface State {
   debugMessages: string[];
-  mapCurrentCenterPosition: LatLng;
-  webviewContent: string;
-  isLoading: boolean;
+  mapCurrentCenterPosition: LatLng | null;
+  webviewContent: string | null;
+  isLoading: boolean | null;
 }
 
 class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
@@ -54,16 +54,16 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     },
     onError: (syntheticEvent: any) => {},
     onLoadEnd: () => {},
-    onLoadStart: () => {}
+    onLoadStart: () => {},
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       debugMessages: [],
       isLoading: null,
       mapCurrentCenterPosition: null,
-      webviewContent: null
+      webviewContent: null,
     };
     this.webViewRef = null;
   }
@@ -75,9 +75,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private loadHTMLFile = async () => {
     try {
       let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      let fileString: string = await FileSystem.readAsStringAsync(
-        asset.localUri
-      );
+      let fileString: string = await FileSystem.readAsStringAsync(asset.localUri as string);
 
       this.setState({ webviewContent: fileString });
     } catch (error) {
@@ -94,7 +92,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       mapLayers,
       mapShapes,
       ownPositionMarker,
-      zoom
+      zoom,
     } = this.props;
 
     if (!prevState.webviewContent && webviewContent) {
@@ -126,10 +124,10 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
 
     if (!isEqual(mapCenterPosition, mapCurrentCenterPosition)) {
       this.setState({
-        mapCurrentCenterPosition: mapCenterPosition
+        mapCurrentCenterPosition: mapCenterPosition as object | LatLng | number[] | null,
       });
       this.sendMessage({
-        mapCenterPosition
+        mapCenterPosition,
       });
     }
   };
@@ -145,7 +143,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     }
     if (message.event === WebViewLeafletEvents.ON_MOVE_END) {
       this.setState({
-        mapCurrentCenterPosition: message.payload.mapCenterPosition
+        mapCurrentCenterPosition: message?.payload?.mapCenterPosition || null,
       });
     }
     onMessageReceived(message);
@@ -155,9 +153,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private sendMessage = (payload: object) => {
     this.updateDebugMessages(`sending: ${payload}`);
 
-    this.webViewRef?.injectJavaScript(
-      `window.postMessage(${JSON.stringify(payload)}, '*');`
-    );
+    this.webViewRef?.injectJavaScript(`window.postMessage(${JSON.stringify(payload)}, '*');`);
   };
 
   // Send a startup message with initalizing values to the map
@@ -169,7 +165,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       mapShapes,
       mapCenterPosition,
       ownPositionMarker,
-      zoom = 7
+      zoom = 7,
     } = this.props;
     if (mapLayers) {
       startupMessage.mapLayers = mapLayers;
@@ -186,7 +182,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     if (ownPositionMarker) {
       startupMessage.ownPositionMarker = {
         ...ownPositionMarker,
-        id: OWN_POSTION_MARKER_ID
+        id: OWN_POSTION_MARKER_ID,
       };
     }
 
@@ -195,48 +191,42 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     this.setState({ isLoading: false });
     this.updateDebugMessages("sending startup message");
 
-    this.webViewRef.injectJavaScript(
-      `window.postMessage(${JSON.stringify(startupMessage)}, '*');`
-    );
+    this.webViewRef.injectJavaScript(`window.postMessage(${JSON.stringify(startupMessage)}, '*');`);
   };
 
   // Add a new debug message to the debug message array
   private updateDebugMessages = (debugMessage: string) => {
     this.setState({
-      debugMessages: [...this.state.debugMessages, debugMessage]
+      debugMessages: [...this.state.debugMessages, debugMessage],
     });
   };
 
   private onError = (syntheticEvent: any) => {
-    this.props.onError(syntheticEvent);
+    if (this.props.onError) this.props.onError(syntheticEvent);
   };
   private onLoadEnd = () => {
     this.setState({ isLoading: false });
-    this.props.onLoadEnd();
+    if (this.props.onLoadEnd) this.props.onLoadEnd();
   };
   private onLoadStart = () => {
     this.setState({ isLoading: true });
-    this.props.onLoadStart();
+    if (this.props.onLoadStart) this.props.onLoadStart();
   };
 
   // Output rendered item to screen
   render() {
     const { debugMessages, webviewContent } = this.state;
-    const {
-      backgroundColor,
-      doShowDebugMessages,
-      loadingIndicator
-    } = this.props;
+    const { backgroundColor, doShowDebugMessages, loadingIndicator } = this.props;
 
     if (webviewContent) {
       return (
         <WebViewLeafletView
-          backgroundColor={backgroundColor}
+          backgroundColor={backgroundColor as string}
           debugMessages={debugMessages}
-          doShowDebugMessages={doShowDebugMessages}
+          doShowDebugMessages={doShowDebugMessages === true}
           handleMessage={this.handleMessage}
           webviewContent={webviewContent}
-          loadingIndicator={loadingIndicator}
+          loadingIndicator={loadingIndicator as any}
           onError={this.onError}
           onLoadEnd={this.onLoadEnd}
           onLoadStart={this.onLoadStart}
